@@ -32,14 +32,9 @@
     <div class='container'>
       <img class='profile' src="profile.png" alt="">
       <!-- <h3>Talal El Zeini</h3> -->
-      <button id='instagram' onclick='clicked(this.id)'>Instagram</button>
-      <button id='github' onclick='clicked(this.id)'>Github</button>
-      <button id='portfolio' onclick='clicked(this.id)'>Portfolio</button>
-      <button id='linkedin' onclick='clicked(this.id)'>LinkedIn</button>
-      <button id='real-estate' onclick='clicked(this.id)'>Real Estate Website</button>
-      <button id='quiz-generator' onclick='clicked(this.id)'>Quiz Generator</button>
-      <button id='math-quiz' onclick='clicked(this.id)'>Math Quiz</button>
-      <button id='covid-tracker' onclick='clicked(this.id)'>COVID Tracker</button>
+      <div id='links'>
+       
+      </div>
     </div>
   </section>
 </body>
@@ -56,11 +51,21 @@
   firebase.initializeApp(firebaseConfig);
 
   db = firebase.database()
-  function clicked(buttonId) {
-    var path = db.ref(buttonId);
-    path.on('value', (snapshot) => {
-      const data = snapshot.val();
-      window.location = data
+  var path = db.ref("Links");
+  path.on('value', (snapshot) => {
+    const data = snapshot.val()
+    const keys = Object.keys(data)
+    var length = keys.length
+    for( let i = 0; i < length; i++ ){
+      var BtnString = "<button id = '" + (keys[i]) + "' onclick='goToLink(this.id)' >" + (keys[i]).substring(1) + " </>"
+      document.getElementById('links').innerHTML += BtnString
+    }
+  });
+  function goToLink(btnId){
+      var path = db.ref("Links/" + btnId);
+      path.on('value', (snapshot) => {
+      const link = snapshot.val()["link"]
+      window.location = link
     });
   }
 </script>
